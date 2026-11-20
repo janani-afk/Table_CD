@@ -34,3 +34,60 @@
     </properties>
 
 </project>
+
+
+
+//pipeline script:
+
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/janani-afk/repo_name.git'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    mkdir -p deploy
+                    cp target/*.jar deploy/
+                '''
+            }
+        }
+
+        stage('Execute') {
+            steps {
+                sh 'java -jar deploy/Project_name-1.0-SNAPSHOT.jar'
+            }
+        }
+    }
+}
+
+//after deploy 
+sudo ls -l /var/lib/jenkins/workspace/job_name/deploy/
+
+//to execute :
+
+sudo java -jar /var/lib/jenkins/workspace/job_name/deploy/*.jar
