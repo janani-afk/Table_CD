@@ -148,3 +148,62 @@ jar{
     }
 }
 
+
+//Ansible ROles
+
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for prerequisites
+- name: Install git
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for postgresql
+
+- name: Install postgresql
+  apt:
+    name: postgresql
+    state: present
+    update_cache: yes
+- name: Start postgresql
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for apache
+
+- name: Install apache
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+stack.yml
+- hosts: localhost
+  become: true
+  roles:
+       - prerequisites
+       - postgresql
+       - apache
+
+
+
+
+
+
+
+
+
+
+
+
+
+
